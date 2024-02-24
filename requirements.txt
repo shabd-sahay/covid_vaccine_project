@@ -1,0 +1,6 @@
+pip install flask
+pip install pymysql
+pip install datetime
+pip install re
+pip install schedule
+pip install time
