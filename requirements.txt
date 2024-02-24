@@ -1,7 +1,6 @@
 flask
 pymysql
 datetime
-re
 schedule
 time
 Gunicorn
