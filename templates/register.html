@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>covid-vaccine</title>
+    <link rel="stylesheet" href="../static/register.css">
+</head>
+<body>
+    <h2>Register</h2>
+    <form action="{{ url_for('register') }}" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br>
+        {% if email_error %}
+            <p class="error">{{ email_error }}</p>
+        {% endif %}
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        {% if password_error %}
+            <p class="error">{{ password_error }}</p>
+        {% endif %}
+        <input type="submit" value="Register" id="submit">
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+</body>
+</html>

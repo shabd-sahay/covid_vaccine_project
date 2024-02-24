@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>covid-vaccine</title>
+    <link rel="stylesheet" href="../static/dosage_details_grouped.css">
+</head>
+<body>
+    <h1>Dosage Details Grouped by Centers</h1>
+    <hr>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>Center ID</th>
+                <th>Center Name</th>
+                <th>Center City</th>
+                <th>Total Doses Booked</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dosage_detail in dosage_details %}
+            <tr>
+                <td>{{ dosage_detail.center_id }}</td>
+                <td>{{ dosage_detail.center_name }}</td>
+                <td>{{ dosage_detail.center_city }}</td>
+                <td>{{30 - dosage_detail.total_doses_booked }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

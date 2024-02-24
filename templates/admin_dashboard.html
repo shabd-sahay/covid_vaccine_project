@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>covid-vaccine</title>
+    <link rel="stylesheet" href="../static/admin_dashboard.css">
+</head>
+<body>
+    <h1>Welcome to Admin Dashboard</h1>
+    <h2>Centers List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Center Name</th>
+                <th>City</th>
+                <th>Working Hours</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for center in centers %}
+            <tr>
+                <td>{{ center.name }}</td>
+                <td>{{ center.city }}</td>
+                <td>{{ center.working_hours }}</td>
+                <td>
+                    <a href="/dosage_details/{{ center.id }}">Center Details</a>
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav>
+        <a href="/add_center">Add New Center</a>
+        <a href="/logout" id="logout">Logout</a>
+        <a href="/get_dosage_details">Dosage Details</a>
+    </nav>
+    
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>covid-vaccine</title>
+    <link rel="stylesheet" href="../static/user_dashboard.css">
+</head>
+<body>
+    <h1>Welcome to User Dashboard</h1>
+    <hr>
+    <h2>Centers List</h2>
+    <hr>
+
+    <form action="/search" method="post">
+        <a href="/user_dashboard">Reset Filter</a>
+        <input type="text" name="search_query" placeholder="Enter center name or city">
+        <button type="submit">Search</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>City</th>
+                <th>Center Name</th>
+                <th>Slots for {{ today }}</th>
+                <th>Apply for {{ today }}</th>
+                <th>Slots for {{ tomorrow }}</th>
+                <th>Apply for {{ tomorrow }}</th>
+                <th>Slots for {{ day_after_tomorrow }}</th>
+                <th>Apply for {{ day_after_tomorrow }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for center_id, center_data in centers_data.items() %}
+            <tr>
+                <td>{{ center_data.city }}</td>
+                <td>{{ center_data.name }}</td>
+                <td>{{ center_data.slots[today] }}</td>
+                <td>
+                    <form action="/apply" method="post">
+                        <input type="hidden" name="center_id" value="{{ center_id }}">
+                        <input type="hidden" name="date" value="{{ today }}">
+                        <button type="submit">Apply</button>
+                    </form>
+                </td>
+                <td>{{ center_data.slots[tomorrow] }}</td>
+                <td>
+                    <form action="/apply" method="post">
+                        <input type="hidden" name="center_id" value="{{ center_id }}">
+                        <input type="hidden" name="date" value="{{ tomorrow }}">
+                        <button type="submit">Apply</button>
+                    </form>
+                </td>
+                <td>{{ center_data.slots[day_after_tomorrow] }}</td>
+                <td>
+                    <form action="/apply" method="post">
+                        <input type="hidden" name="center_id" value="{{ center_id }}">
+                        <input type="hidden" name="date" value="{{ day_after_tomorrow }}">
+                        <button type="submit">Apply</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/logout" id="logout">Logout</a>
+</body>
+</html>
