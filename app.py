@@ -71,7 +71,7 @@ def validate_email(email):
 
 # Validation for Password
 def validate_password(password):
-    # Password should be at least 8 characters long and contain at least one digit and one special character
+    # Password should be at least 8 characters long and contain at least one digit and one alpha character
     if len(password) < 8:
         return False
     if not any(char.isdigit() for char in password):
@@ -79,6 +79,9 @@ def validate_password(password):
     if not any(char.isalpha() for char in password):
         return False
     return True
+
+
+
 # Routes
 
 #login
@@ -128,11 +131,9 @@ def register():
         
         if email_error or password_error:
             return render_template('register.html', email_error=email_error, password_error=password_error)
-        
-        
-
         try:
             with connection.cursor() as cursor:
+                ##admin is 1 so admin cannot register only user can
                 sql = "INSERT INTO `users` (`username`, `email`, `password`,`is_admin`) VALUES (%s, %s, %s, 0)"
                 cursor.execute(sql, (username, email, password))
                 connection.commit()
@@ -157,6 +158,7 @@ def admin_dashboard():
     except pymysql.Error as e:
         return str(e)
 
+##when admin needs to add center
 @app.route('/add_center', methods=['GET', 'POST'])
 def add_center():
     if 'user_id' not in session:
@@ -166,7 +168,7 @@ def add_center():
         name = request.form['name']
         city = request.form['city']
         working_hours = request.form['working_hours']
-        initial_slots = 10  # Initial number of slots
+        initial_slots = 10 
         
         try:
             with connection.cursor() as cursor:
@@ -174,12 +176,14 @@ def add_center():
                 center_sql = "INSERT INTO `centers` (`name`, `city`, `working_hours`) VALUES (%s, %s, %s)"
                 cursor.execute(center_sql, (name, city, working_hours))
                 connection.commit()
-                
-                center_id = cursor.lastrowid  # Get the ID of the inserted center
+
+                # Get the ID of the inserted center
+                center_id = cursor.lastrowid  
                 
                 # Insert into dosage_details table for each day with initial slots
                 today = datetime.now().date()
-                for i in range(3):  # Insert dosage details for the next 3 days
+                # Insert dosage details for the next 3 days
+                for i in range(3):  
                     date = today + timedelta(days=i)
                     dosage_sql = "INSERT INTO `dosage_details` (`center_id`, `date`, `doses_booked`) VALUES (%s,%s, %s)"
                     cursor.execute(dosage_sql, (center_id, date, initial_slots))
@@ -191,6 +195,7 @@ def add_center():
         
     return render_template('add_center.html')
 
+##get dosage details group by center
 @app.route('/get_dosage_details')
 def get_dosage_details():
     if 'user_id' not in session:
@@ -219,7 +224,7 @@ def get_dosage_details():
     except pymysql.Error as e:
         return str(e)
 
-
+##when admin wants the details of a certain center
 @app.route('/dosage_details/<int:center_id>', methods=['GET', 'POST'])
 def dosage_details(center_id):
     if 'user_id' not in session:
@@ -274,7 +279,9 @@ def user_dashboard():
     
     # Get today's date
     today = datetime.now().date()
+    #tomorrows date
     tomorrow = today + timedelta(days=1)
+    #day after tomorrow's date
     day_after_tomorrow = today + timedelta(days=2)
     
     try:
@@ -317,6 +324,7 @@ def user_dashboard():
     except pymysql.Error as e:
         return str(e)
 
+#when user click apply 
 @app.route('/apply', methods=['POST'])
 def apply():
     if 'user_id' not in session:
@@ -331,10 +339,11 @@ def apply():
             cursor.execute(sql, (center_id, date))
             connection.commit()
             
-            return redirect(url_for('user_dashboard'))  # Redirect to the user dashboard after applying for the slot
+            return redirect(url_for('user_dashboard')) 
     except pymysql.Error as e:
         return str(e)
 
+##when user search by city or name of the centre
 @app.route('/search', methods=['POST'])
 def search():
     if 'user_id' not in session:
@@ -347,7 +356,7 @@ def search():
     day_after_tomorrow = today + timedelta(days=2)
     try:
         with connection.cursor() as cursor:
-            # Your SQL query to search for vaccination centers
+           
             sql = """
             SELECT 
                 `centers`.`id` AS center_id,
@@ -392,6 +401,6 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-##if __name__ == '__main__':
-##    app.secret_key = 'your_secret_key'
-##    app.run(debug=True)
+if __name__ == '__main__':
+    app.secret_key = 'your_secret_key'
+    app.run(debug=True)
